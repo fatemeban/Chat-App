@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head> </head>
-  <body>
+  <head>
+    <title>Chat App</title>
+    <link rel="icon" href="./img/icon.png" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body
     Chat app
     <div id="message"></div>
 
@@ -13,13 +17,16 @@
 
     <script id="message-template" type="text/html">
       <div>
-        <p>{{message}}</p>
+        <p>{{createdAt}} - {{message}}</p>
       </div>
     </script>
 
     <script id="location-message-template" type="text/html">
       <div>
-        <p><a href="{{url}}" target="_blank">My current location</a></p>
+        <p>
+          {{createdAt}} -
+          <a href="{{url}}" target="_blank">My current location</a>
+        </p>
       </div>
     </script>
 

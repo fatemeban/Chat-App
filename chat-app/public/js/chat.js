@@ -1,3 +1,5 @@
+//const moment = require("moment");
+
 //const Mustache = require("mustache");
 const socket = io();
 //Element
@@ -17,7 +19,8 @@ const locationMessageTemplate = document.querySelector(
 socket.on("message", (message) => {
   console.log(message);
   const html = Mustache.render(messageTemplates, {
-    message: message,
+    message: message.text,
+    createdAt: moment(message.createdAt).format("h:mm A"),
   });
 
   $messages.insertAdjacentHTML("beforeend", html);
@@ -43,12 +46,13 @@ $messageForm.addEventListener("submit", (e) => {
   });
 });
 
-socket.on("locationMessage", (url) => {
-  console.log(url);   
+socket.on("locationMessage", (message) => {
+  console.log(message);
   const html = Mustache.render(locationMessageTemplate, {
-    url,
+    url: message.url,
+    createdAt: moment(message.createdAt).format("h:mm A"),
   });
-  $messages.insertAdjacentHTML("beforebegin", html);
+  $messages.insertAdjacentHTML("beforeend", html);
 });
 
 $sendLocationButton.addEventListener("click", () => {
