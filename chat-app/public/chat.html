@@ -19,9 +19,16 @@
               placeholder="Message"
               required
               autocomplete="off" />
-            <button>Send</button>
+            <button type="submit">Send</button>
           </form>
           <button id="send-location">Send location</button>
+          <button id="send-picture">Send Picture</button>
+          <input type="file" id="picture-input" accept="image/*" />
+          <button id="record-button">Record Voice Message</button>
+          <button id="stop-record-button" style="display: none">
+            Stop Recording
+          </button>
+          <audio id="voice-message" controls style="display: none"></audio>
         </div>
       </div>
     </div>
@@ -43,6 +50,36 @@
           <span class="message__meta">{{createdAt}}</span>
         </p>
         <p><a href="{{url}}" target="_blank">My current location</a></p>
+      </div>
+    </script>
+
+    <script id="picture-message-template" type="text/html">
+      <div class="message">
+        <p>
+          <span class="message__name">{{username}}</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>
+          <img
+            src="{{url}}"
+            alt="Picture"
+            style="max-width: 100%; height: auto;" />
+        </p>
+      </div>
+    </script>
+
+    <script id="voice-message-template" type="text/html">
+      <div class="message">
+        <p>
+          <span class="message__name">{{username}}</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>
+          <audio controls>
+            <source src="{{url}}" type="audio/wav" />
+            Your browser does not support the audio element.
+          </audio>
+        </p>
       </div>
     </script>
 

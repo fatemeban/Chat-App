@@ -13,7 +13,16 @@ const genarateLocationMessage = (username, url) => {
   };
 };
 
+const generatePictureMessage = (username, base64Image) =>  {
+  return {
+    username,
+    url: base64Image,
+    createdAt: new Date().getTime(),
+  };
+}
+
 module.exports = {
   genarateMessage,
   genarateLocationMessage,
+  generatePictureMessage
 };

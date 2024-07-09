@@ -139,3 +139,28 @@ button:disabled {
   font-weight: 300;
   padding: 12px 24px 0;
 }
+/* Adjust button styling */
+#send-picture {
+  /* Ensure the button is visible */
+  /* Add padding to give the button more height */
+  padding: 0.75rem 1rem;
+  /* Increase font size for better readability */
+  font-size: 1rem;
+  /* Adjust background color and hover effect */
+  background-color: #6b47b8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#send-picture:hover {
+  background-color: #6b47b8;
+}
+/* Ensure the file input is accessible */
+#picture-input {
+  /* Display it inline with button (not necessary hidden) */
+  display: inline;
+  /* Optionally style to match button or ensure it's visible */
+}

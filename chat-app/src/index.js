@@ -6,6 +6,7 @@ const Filter = require("bad-words");
 const {
   genarateMessage,
   genarateLocationMessage,
+  generatePictureMessage,
 } = require("./utils/messages");
 const {
   addUser,
@@ -13,7 +14,6 @@ const {
   getUser,
   getUsersInRoom,
 } = require("./utils/users");
-const { emit } = require("process");
 
 const app = express();
 const server = http.createServer(app);
@@ -55,6 +55,9 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id);
+    if (!user) {
+      return callback("User not found");
+    }
     const filter = new Filter();
 
     if (filter.isProfane(message)) {
@@ -67,6 +70,9 @@ io.on("connection", (socket) => {
 
   socket.on("sendLocation", (coords, callback) => {
     const user = getUser(socket.id);
+    if (!user) {
+      return callback("User not found");
+    }
     io.to(user.room).emit(
       "locationMessage",
       genarateLocationMessage(
@@ -77,6 +83,39 @@ io.on("connection", (socket) => {
     callback();
   });
 
+  socket.on("sendPicture", (base64Image, callback) => {
+    const user = getUser(socket.id);
+    if (!user) {
+      return callback("User not found");
+    }
+    io.to(user.room).emit(
+      "pictureMessage",
+      generatePictureMessage(user.username, base64Image)
+    );
+    callback();
+  });
+
+  socket.on("sendVoiceMessage", (audioBlob, callback) => {
+    const user = getUser(socket.id);
+    if (!user) {
+      return callback("User not found");
+    }
+
+    io.to(user.room).emit(
+      "voiceMessage",
+      generateVoiceMessage(user.username, audioBlob)
+    );
+    callback();
+  });
+
+  function generateVoiceMessage(username, audioBlob) {
+    return {
+      username,
+      audioBlob,
+      createdAt: new Date().getTime(),
+    };
+  }
+
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
     if (user) {
@@ -84,10 +123,10 @@ io.on("connection", (socket) => {
         "message",
         genarateMessage("Admin", `${user.username} has left`)
       );
-     io.to(user.room).emit("roomData", {
-       room: user.room,
-       users: getUsersInRoom(user.room),
-     });
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
     }
   });
 });
