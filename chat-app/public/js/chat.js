@@ -1,3 +1,4 @@
+// chat.js
 const socket = io();
 
 // Elements
@@ -9,7 +10,8 @@ const $messages = document.querySelector("#messages");
 const $sendPictureButton = document.querySelector("#send-picture");
 const $pictureInput = document.querySelector("#picture-input");
 const $sidebar = document.querySelector("#sidebar");
-
+const $audioForm = document.querySelector("#audio-form");
+const $audioInput = document.querySelector("#audio-input");
 // Templates
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 const locationMessageTemplate = document.querySelector(
@@ -19,28 +21,26 @@ const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML;
 const pictureMessageTemplate = document.querySelector(
   "#picture-message-template"
 ).innerHTML;
+const voiceMessageTemplate = document.querySelector(
+  "#voice-message-template"
+).innerHTML;
 
 // Options
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
-const autoscroll = () => {
-  // New message element
-  // const $newMessage = $messages.lastElementChild;
+const arrayBuffer = message.imageBuffer;
+const blob = new Blob([arrayBuffer], { type: "image/jpeg" }); // Adjust the type based on the image type
+const imageUrl = URL.createObjectURL(blob);
 
-  // Height of the new message
+const autoscroll = () => {
+  const $newMessage = $messages.lastElementChild;
   const newMessageStyles = getComputedStyle($newMessage);
   const newMessageMargin = parseInt(newMessageStyles.marginBottom);
   const newMessageHeight = $newMessage.offsetHeight + newMessageMargin;
-
-  // Visible height
   const visibleHeight = $messages.offsetHeight;
-
-  // Height of messages container
   const containerHeight = $messages.scrollHeight;
-
-  // How far have I scrolled?
   const scrollOffset = $messages.scrollTop + visibleHeight;
 
   if (containerHeight - newMessageHeight <= scrollOffset) {
@@ -70,11 +70,23 @@ socket.on("locationMessage", (message) => {
   autoscroll();
 });
 
-socket.on("pictureMessage", (message) => {
+socket.on("sendPicture", (message) => {
   console.log("Received picture message:", message);
+
   const html = Mustache.render(pictureMessageTemplate, {
     username: message.username,
-    url: message.url,
+    imageUrl: imageUrl,
+    createdAt: moment(message.createdAt).format("h:mm A"),
+  });
+  $messages.insertAdjacentHTML("beforeend", html);
+  autoscroll();
+});
+
+socket.on("voiceMessage", (message) => {
+  console.log("Received audio message:", message);
+  const html = Mustache.render(voiceMessageTemplate, {
+    username: message.username,
+    audioUrl: audioUrl,
     createdAt: moment(message.createdAt).format("h:mm A"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
@@ -82,29 +94,21 @@ socket.on("pictureMessage", (message) => {
 });
 
 socket.on("roomData", ({ room, users }) => {
-  const html = Mustache.render(sidebarTemplate, {
-    room,
-    users,
-  });
+  const html = Mustache.render(sidebarTemplate, { room, users });
   document.querySelector("#sidebar").innerHTML = html;
 });
 
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
   $messageFormButton.setAttribute("disabled", "disabled");
-
   const message = e.target.elements.message.value;
-
   socket.emit("sendMessage", message, (error) => {
     $messageFormButton.removeAttribute("disabled");
     $messageFormInput.value = "";
     $messageFormInput.focus();
-
     if (error) {
       return console.log(error);
     }
-
     console.log("Message delivered!");
   });
 });
@@ -113,9 +117,7 @@ $sendLocationButton.addEventListener("click", () => {
   if (!navigator.geolocation) {
     return alert("Geolocation is not supported by your browser.");
   }
-
   $sendLocationButton.setAttribute("disabled", "disabled");
-
   navigator.geolocation.getCurrentPosition((position) => {
     socket.emit(
       "sendLocation",
@@ -131,36 +133,54 @@ $sendLocationButton.addEventListener("click", () => {
   });
 });
 
-if ($sendPictureButton && $pictureInput) {
-  $sendPictureButton.addEventListener("click", () => {
-    $pictureInput.click(); // Trigger file input click
-  });
+//////////image upload form/////////////
 
-  $pictureInput.addEventListener("change", handlePictureInput);
-} else {
-  console.error("Cannot find sendPictureButton or pictureInput element.");
-}
-
-// Function to handle picture input change
 function handlePictureInput(event) {
   const file = event.target.files[0];
   if (!file) {
-    return;
+    return error;
   }
   const reader = new FileReader();
   reader.onload = () => {
     const base64Image = reader.result;
-    socket.emit("sendPicture", base64Image, (error) => {
+    socket.emit("sendImage", base64Image, (error) => {
       if (error) {
         console.error("Error sending picture:", error);
       } else {
-        console.log("Picture sent successfully!");
-        $pictureInput.value = ""; // Reset file input after successful send
+        console.log("Image sent successfully");
       }
+      $pictureInput.value = "";
     });
   };
   reader.readAsDataURL(file);
 }
+
+//////////audio upload form/////////////
+
+$audioForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const file = $audioInput.files[0];
+
+  if (!file) {
+    return console.error("No file selected");
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const base64Audio = reader.result;
+    socket.emit("sendAudio", base64Audio, (error) => {
+      if (error) {
+        console.error("Error sending audio:", error);
+      } else {
+        console.log("Audio sent successfully");
+      }
+      $audioInput.value = "";
+    });
+  };
+
+  reader.readAsDataURL(file);
+});
 
 socket.emit("join", { username, room }, (error) => {
   if (error) {
