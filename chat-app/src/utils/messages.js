@@ -5,7 +5,7 @@ const genarateMessage = (username, text) => {
     createdAt: new Date().getTime(),
   };
 };
-const genarateLocationMessage = (username, url) => {
+const generateLocationMessage = (username, url) => {
   return {
     username,
     url,
@@ -13,16 +13,26 @@ const genarateLocationMessage = (username, url) => {
   };
 };
 
-const generatePictureMessage = (username, base64Image) =>  {
+const generatePictureMessage = (username, buffer) => {// Debugging statement
   return {
     username,
-    url: base64Image,
+    buffer: buffer.toString("base64"),
     createdAt: new Date().getTime(),
   };
-}
+};
+
+const generateVoiceMessage = (username, buffer) => {
+  return {
+    username,
+    buffer: buffer.toString("base64"),
+    createdAt: new Date().getTime(),
+  };
+};
 
 module.exports = {
   genarateMessage,
-  genarateLocationMessage,
-  generatePictureMessage
+  generateLocationMessage,
+  generatePictureMessage,
+  generateVoiceMessage,
+  generateVoiceMessage,
 };
