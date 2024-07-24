@@ -1,49 +1,51 @@
+/* Global Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 html {
   font-size: 16px;
 }
-input {
-  font-size: 14px;
-}
+
 body {
   line-height: 1.4;
   color: #333;
   font-family: Helvetica, Arial, sans-serif;
 }
-h1 {
-  margin-bottom: 16px;
-}
-label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: #777;
-}
+
+/* Inputs */
 input {
   border: 1px solid #eee;
-  padding: 12px;
+  padding: 0.75rem;
+  font-size: 1rem;
   outline: none;
 }
+
+/* Buttons */
 button {
   cursor: pointer;
-  padding: 12px;
+  padding: 0.75rem 1.25rem;
   background: #7c5cbf;
   border: none;
   color: #fff;
-  font-size: 16px;
-  transition: background 0.3s ease;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
+
 button:hover {
   background: #6b47b8;
+  transform: scale(1.05);
 }
+
 button:disabled {
   cursor: default;
   background: #7c5cbf94;
 }
+
+/* Centered Form */
 .centered-form {
   background: #333744;
   width: 100vw;
@@ -52,115 +54,143 @@ button:disabled {
   justify-content: center;
   align-items: center;
 }
+
 .centered-form__box {
   box-shadow: 0 0 17px 1px #1d1f26;
   background: #f7f7fa;
-  padding: 24px;
-  width: 250px;
-}
-.centered-form button {
+  padding: 2rem;
   width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
 }
-.centered-form input {
-  margin-bottom: 16px;
-  width: 100%;
-}
+
+/* Chat Layout */
 .chat {
   display: flex;
-}
-.chat__sidebar {
   height: 100vh;
+}
+
+.chat__sidebar {
+  height: 100%;
   color: #fff;
   background: #333744;
-  width: 225px;
-  overflow-y: scroll;
+  width: 250px;
+  overflow-y: auto;
+  padding: 1rem;
 }
+
 .chat__main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   max-height: 100vh;
+  padding: 1rem;
 }
+
 .chat__messages {
   flex-grow: 1;
-  padding: 24px 24px 0;
-  overflow-y: scroll;
+  padding: 1rem;
+  overflow-y: auto;
 }
+
+/* Messages */
 .message {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
+
 .message__name {
   font-weight: 600;
-  font-size: 14px;
-  margin-right: 8px;
+  font-size: 1rem;
+  margin-right: 0.5rem;
 }
+
 .message__meta {
   color: #777;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
+
 .message a {
   color: #0070cc;
 }
+
+/* Compose Section */
 .compose {
   display: flex;
   flex-shrink: 0;
-  margin-top: 16px;
-  padding: 24px;
+  margin-top: 1rem;
+  padding: 1rem;
 }
+
 .compose form {
   display: flex;
   flex-grow: 1;
-  margin-right: 16px;
+  margin-right: 1rem;
 }
+
 .compose input {
   border: 1px solid #eee;
   width: 100%;
-  padding: 12px;
-  margin: 0 16px 0 0;
+  padding: 0.75rem;
+  margin-right: 1rem;
   flex-grow: 1;
 }
+
 .compose button {
-  font-size: 14px;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
 }
+
+/* Sidebar */
 .room-title {
   font-weight: 400;
-  font-size: 22px;
+  font-size: 1.5rem;
   background: #2c2f3a;
-  padding: 24px;
+  padding: 1rem;
+  color: #fff;
+  border-bottom: 1px solid #444;
 }
+
 .list-title {
   font-weight: 500;
-  font-size: 18px;
-  margin-bottom: 4px;
-  padding: 12px 24px 0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: #fff;
 }
+
 .users {
   list-style-type: none;
   font-weight: 300;
-  padding: 12px 24px 0;
-}
-/* Adjust button styling */
-#send-picture {
-  /* Ensure the button is visible */
-  /* Add padding to give the button more height */
   padding: 0.75rem 1rem;
-  /* Increase font size for better readability */
+  color: #fff;
+}
+
+/* File Upload Buttons */
+#send-picture,
+#send-audio,
+#send-video {
+  padding: 0.75rem 1rem;
   font-size: 1rem;
-  /* Adjust background color and hover effect */
   background-color: #6b47b8;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#send-picture:hover {
-  background-color: #6b47b8;
+#send-picture:hover,
+#send-audio:hover,
+#send-video:hover {
+  background-color: #5a3e8d;
+  transform: scale(1.05);
 }
-/* Ensure the file input is accessible */
-#picture-input {
-  /* Display it inline with button (not necessary hidden) */
-  display: inline;
-  /* Optionally style to match button or ensure it's visible */
+
+/* File Inputs */
+#picture-input,
+#audio-input,
+#video-input {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1rem;
 }

@@ -9,7 +9,7 @@ const { username, room } = Qs.parse(location.search, {
 
 socket.emit("join", { username, room }, (error) => {
   if (error) {
-    alert(error);
+    alert(" you cant join try again");
     location.href = "/";
   }
 });
@@ -20,5 +20,4 @@ socket.on("sessionId", (message) => {
 
 initializeMessageHandlers(socket, state);
 initializeLocationHandlers(socket, state);
-initializePictureHandlers(socket, state);
-initializeAudioHandlers(socket, state);
+initializeFileHandlers(socket, state);

@@ -28,6 +28,10 @@
             <button type="submit" id="send-audio">Send Audio</button>
             <input type="file" id="audio-input" accept="audio/*" />
           </form>
+          <form id="video-form">
+            <button type="submit" id="send-video">Send Video</button>
+            <input type="file" id="video-input" accept="video/*" />
+          </form>
         </div>
       </div>
     </div>
@@ -78,6 +82,21 @@
             <source src="{{url}}" type="audio/wav" />
             Your browser does not support the audio element.
           </audio>
+        </p>
+      </div>
+    </script>
+
+    <script id="video-message-template" type="text/html">
+      <div class="message">
+        <p>
+          <span class="message__name">{{username}}</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>
+          <video controls width="320" height="240">
+            <source src="{{url}}" type="video/mp4" />
+            Your browser does not support the video element.
+          </video>
         </p>
       </div>
     </script>

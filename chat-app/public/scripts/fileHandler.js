@@ -1,4 +1,4 @@
-window.initializeAudioHandlers = (socket, state) => {
+window.initializeFileHandlers = (socket, state) => {
   const $messages = document.querySelector("#messages");
   const voiceMessageTemplate = document.querySelector(
     "#voice-message-template"
@@ -6,8 +6,11 @@ window.initializeAudioHandlers = (socket, state) => {
   const pictureMessageTemplate = document.querySelector(
     "#picture-message-template"
   ).innerHTML;
-  const $audioForm = document.querySelector("#audio-form");
-  const $audioInput = document.querySelector("#audio-input");
+  const videoMessageTemplate = document.querySelector(
+    "#video-message-template"
+  ).innerHTML;
+  const $videoForm = document.querySelector("#video-form");
+  const $videoInput = document.querySelector("#video-input");
 
   socket.on("fileMessage", (message) => {
     if (message.type === "audio") {
@@ -27,19 +30,18 @@ window.initializeAudioHandlers = (socket, state) => {
       });
       $messages.insertAdjacentHTML("beforeend", html);
       autoscroll();
-    } else {
+    } else if (message.type === "video") {
       // video
       // todo: create video component
-      const html = Mustache.render(pictureMessageTemplate, {
+      const html = Mustache.render(videoMessageTemplate, {
         username: message.username,
-        imageUrl: message.url,
+        videoUrl: message.url,
         createdAt: moment(message.createdAt).format("h:mm A"),
       });
       $messages.insertAdjacentHTML("beforeend", html);
       autoscroll();
     }
   });
-
   $audioForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const file = $audioInput.files[0];
@@ -62,6 +64,30 @@ window.initializeAudioHandlers = (socket, state) => {
       })
       .catch((err) => {
         console.error("Error sending audio:", err);
+      });
+  });
+  $videoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const file = $videoInput.files[0];
+    if (!file) {
+      return console.error("No video file selected");
+    }
+
+    const data = new FormData();
+    data.append("files", file);
+    data.append("type", "video");
+    data.append("session_id", state.sessionId);
+
+    fetch("/file-upload", {
+      method: "POST",
+      body: data,
+    })
+      .then(() => {
+        console.log("Video sent successfully");
+        $videoInput.value = "";
+      })
+      .catch((err) => {
+        console.error("Error sending video:", err);
       });
   });
 };

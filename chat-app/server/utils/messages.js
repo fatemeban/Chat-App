@@ -1,4 +1,4 @@
-const genarateMessage = (username, text) => {
+const generateMessage = (username, text) => {
   return {
     username,
     text,
@@ -23,7 +23,7 @@ const generateFileMessage = (type, username, url) => {
 };
 
 module.exports = {
-  genarateMessage,
+  generateMessage,
   generateLocationMessage,
   generateFileMessage,
 };
